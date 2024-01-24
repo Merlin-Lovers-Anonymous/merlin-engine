@@ -1,3 +1,5 @@
+// /src/main.rs
+
 /*
 
  _______  _______  _______  _       _________ _
@@ -12,6 +14,8 @@
 Copyright (c) 2023 Wilhelm, Donkey
 
 */
+
+mod checks;
 
 fn main() {
     println!("Hello, world!");
