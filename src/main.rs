@@ -30,15 +30,18 @@ fn main() {
             println!("Testing check functions...");
 
             println!("Done");
+            exit(0);
         },
 
         "--help" => {
             println!("Please see Merlin Engine documentation for an explanation of command-line parameters.");
-            println!("Click {} to visit the wiki.", Link::new("here", "https://github.com/Merlin-Lovers-Anonymous/merlin-engine/wiki"))
+            println!("Click {} to visit the wiki.", Link::new("here", "https://github.com/Merlin-Lovers-Anonymous/merlin-engine/wiki"));
+            exit(0);
         },
 
         _other => {
-            println!("{} is not a recognized command-line parameter.", args[1]);
+            println!("'{}' is not a recognized command-line parameter.", args[1]);
+            exit(0);
         }
 
     }
