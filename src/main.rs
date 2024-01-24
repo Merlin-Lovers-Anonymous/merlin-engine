@@ -16,6 +16,7 @@ use std::process::exit;
 use terminal_link::Link;
 
 mod checks;
+mod config;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

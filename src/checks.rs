@@ -11,16 +11,16 @@ enum Algorithm {
     SHA512,
 }
 
-struct Vuln {
+pub struct Vuln {
     pass_message: String,
     check_logic: String,
     hint: String,
     point_value: f32,
 
-
+    checks: [Check; 10],
 }
 
-struct Check {
+pub struct Check {
     check_type: CheckType,
 
     file_path: String,
@@ -39,7 +39,7 @@ mod checks {
         use std::io;
         use std::io::Read;
         use std::path::Path;
-        use ring::digest::{Context, Digest, SHA256};
+        use ring::digest::{Context, SHA256};
         use data_encoding::HEXUPPER;
 
         pub fn path_exists(file_path: &str) -> bool {
@@ -60,7 +60,7 @@ mod checks {
 
             loop {
                 let count = file.read(&mut buffer)?;
-                if (count == 0) {
+                if count == 0 {
                     break;
                 }
                 context.update(&buffer[..count]);

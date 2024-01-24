@@ -1,0 +1,27 @@
+id = "test"           # Image identification code; Can be anything
+title = "Test Round"  # Image title; For display
+os = "Ubuntu 22.04"   # Image os; For display
+user = "merlin"       # Intended login user
+
+
+[[vuln]]
+pass_message = "Check passed"     # Message to be displayed on scoring report
+check_logic = "check1 && check2"  # Boolean logic for checks; If a check does not appear here it is not evaluated
+hint = ""                         # Hint message to be displayed on scoring report
+point_value = 5.1                 # Points awarded for vuln; Takes floating point
+
+    [[vuln.check1]]
+        [[check1.passif]]         # passif condition: check passes if condition evaluates to true
+        type = "PathExists"
+        path = "/etc/issue"
+
+        [[check1.failif]]         # failif condition: check fails if condition evaluates to true
+        type = "PathExists"
+        path = "/etc/issue.net"
+
+    [[vuln.check2]]
+        [[check2.passif]]
+        type = "ChecksumCompare"
+        path = "/etc/issue"
+        algoritm = "MD5"
+        control = "5c95e2aa80a880de305192ceb5b66922"
