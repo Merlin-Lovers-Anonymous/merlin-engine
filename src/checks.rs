@@ -23,11 +23,11 @@ struct Vuln {
 struct Check {
     check_type: CheckType,
 
-    file_path: str,
-    command: str,
-    user: str,
-    group: str,
-    name: str,
+    file_path: String,
+    command: String,
+    user: String,
+    group: String,
+    name: String,
 
 
 }
@@ -47,7 +47,7 @@ mod checks {
         pub fn checksum_compare(file_path: &str, algorithm: Algorithm, comparison: &str) -> bool {
             return match algorithm {
                 Algorithm::MD5 => md5::chksum(File::open(&file_path)) == comparison,
-                _ => false,
+                _else => false,
             }
         }
 
