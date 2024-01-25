@@ -17,7 +17,7 @@ pub struct Vuln {
     hint: String,
     point_value: f32,
 
-    checks: [Check; 10],
+    checks: vec<Check>,
 }
 
 pub struct Check {
@@ -39,24 +39,35 @@ mod checks {
         use std::io;
         use std::io::Read;
         use std::path::Path;
-        use ring::digest::{Context, SHA256};
+        use ring::digest::{Context, MD5, SHA256, SHA512};
         use data_encoding::HEXUPPER;
 
+        // Check if a path exists
         pub fn path_exists(file_path: &str) -> bool {
             return Path::new(&file_path).exists();
         }
         
-        // pub fn checksum_compare(file_path: &str, algorithm: Algorithm, comparison: &str) -> bool {
-        //     return match algorithm {
-        //         Algorithm::MD5 => true,
-        //         Algorithm::SHA256 => true,
-        //         Algorithm::SHA512 => true,
-        //     }
-        // }
-        pub fn calculate_sha256(file_path: &str) -> io::Result<String> {
+        // Check if a file matches the specified hash
+        pub fn file_equals(file_path: &str, algorithm: Algorithm, comparison: &str) -> bool {
+            let hash = checks::file_checks::calculate_hash(&file_path, &algorithm).unwrap();
+            return hash.eq(comparison);
+        }
+
+        // Helper function to calculate file hash
+        fn calculate_hash(file_path: &str, algorithm: Algorithm) -> io::Result<String> {
             let mut file = File::open(file_path)?;
             let mut buffer = [0; 1024];
-            let mut context = Context::new(&SHA256);
+            match algorithm {
+                Algorithm::MD5 => {
+                    let mut context = Context::new(&MD5);
+                },
+                Algorithm::SHA256 => {
+                    let mut context = Context::new(&SHA256);
+                },
+                Algorithm::SHA512 => {
+                    let mut context = Context::new(&SHA512);
+                },
+            }
 
             loop {
                 let count = file.read(&mut buffer)?;
@@ -65,6 +76,7 @@ mod checks {
                 }
                 context.update(&buffer[..count]);
             }
+
             Ok(HEXUPPER.encode(context.finish().as_ref()))
         }
 
@@ -92,9 +104,6 @@ mod tests {
 
     #[test]
     fn test_sha256_hash_pass() {
-        let hash = checks::file_checks::calculate_sha256("./tests/hash.txt").unwrap();
-        println!("{:?}", hash);
-
-        assert_eq!(hash, "F09DC8EA24B801E2E980E06F92110EF577A08F35A32EEC8613624FFD211BF394");
+        assert!(checks::file_checks::file_equals("./tests/hash.txt", Algorithm::SHA256, "F09DC8EA24B801E2E980E06F92110EF577A08F35A32EEC8613624FFD211BF394").unwrap());
     }
 }
