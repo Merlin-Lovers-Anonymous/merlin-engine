@@ -21,7 +21,7 @@ point_value = 5.1                 # Points awarded for vuln; Takes floating poin
 
     [[vuln.check2]]
         [[check2.passif]]
-        type = "ChecksumCompare"
+        type = "HashEquals"
         path = "/etc/issue"
         algoritm = "MD5"
         control = "5c95e2aa80a880de305192ceb5b66922"

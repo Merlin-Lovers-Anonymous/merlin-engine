@@ -2,7 +2,7 @@
 
 enum CheckType {
     PathExists,
-    ChecksumCompare,
+    HashEquals,
 
 }
 enum Algorithm {
@@ -48,7 +48,7 @@ mod checks {
         }
         
         // Check if a file matches the specified hash
-        pub fn file_equals(file_path: &str, algorithm: Algorithm, comparison: &str) -> bool {
+        pub fn hash_equals(file_path: &str, algorithm: Algorithm, comparison: &str) -> bool {
             let hash = checks::file_checks::calculate_hash(&file_path, &algorithm).unwrap();
             return hash.eq(comparison);
         }
