@@ -17,7 +17,7 @@ pub struct Vuln {
     hint: String,
     point_value: f32,
 
-    checks: vec<Check>,
+    checks: Vec<Check>,
 }
 
 pub struct Check {
@@ -41,6 +41,7 @@ mod checks {
         use std::path::Path;
         use ring::digest::{Context, MD5, SHA256, SHA512};
         use data_encoding::HEXUPPER;
+        use crate::checks::Algorithm;
 
         // Check if a path exists
         pub fn path_exists(file_path: &str) -> bool {
@@ -49,7 +50,7 @@ mod checks {
         
         // Check if a file matches the specified hash
         pub fn hash_equals(file_path: &str, algorithm: Algorithm, comparison: &str) -> bool {
-            let hash = checks::file_checks::calculate_hash(&file_path, &algorithm).unwrap();
+            let hash = calculate_hash(&file_path, algorithm).unwrap();
             return hash.eq(comparison);
         }
 
@@ -59,13 +60,13 @@ mod checks {
             let mut buffer = [0; 1024];
             match algorithm {
                 Algorithm::MD5 => {
-                    let mut context = Context::new(&MD5);
+                    Context::new(&MD5);
                 },
                 Algorithm::SHA256 => {
-                    let mut context = Context::new(&SHA256);
+                    Context::new(&SHA256);
                 },
                 Algorithm::SHA512 => {
-                    let mut context = Context::new(&SHA512);
+                    Context::new(&SHA512);
                 },
             }
 

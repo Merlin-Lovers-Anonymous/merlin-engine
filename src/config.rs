@@ -1,6 +1,8 @@
 // /src/config.rs
 
 mod config {
+    use std::env;
+    use std::path::Path;
     use crate::checks::Vuln;
 
     let mut LoadedConfig: &'static ConfigFile; 
@@ -15,11 +17,11 @@ mod config {
         os: String,
         user: String,
 
-        vulns: vec<Vuln>,
+        vulns: Vec<Vuln>,
     }
 
     pub fn load_config() {
-        let configPath: &str = env::current_exe()?.parent().expect("Could not find working directory.");
+        let configPath: &Path = env::current_exe()?.parent().expect("Could not find working directory.");
         
         let configData: Data = toml::
     }
