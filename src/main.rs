@@ -27,8 +27,12 @@ fn main() {
 
     match args[1].as_str() {
 
-        "--test" => {
-            println!("Testing check functions...");
+        _ => unsafe {
+            println!("Testing config load...");
+
+            config::load_config("config.toml");
+
+            println!("Loaded id: {}", config::LOADED_CONFIG.config.id);
 
             println!("Done");
             exit(0);

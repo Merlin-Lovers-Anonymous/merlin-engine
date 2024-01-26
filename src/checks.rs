@@ -39,7 +39,7 @@ mod checks {
         use std::io;
         use std::io::Read;
         use std::path::Path;
-        use ring::digest::{Context, MD5, SHA256, SHA512};
+        use ring::digest::{Context, SHA256, SHA512}; // MD5
         use data_encoding::HEXUPPER;
         use crate::checks::Algorithm;
 
@@ -60,7 +60,7 @@ mod checks {
             let mut buffer = [0; 1024];
             match algorithm {
                 Algorithm::MD5 => {
-                    Context::new(&MD5);
+                    //Context::new(&MD5);
                 },
                 Algorithm::SHA256 => {
                     Context::new(&SHA256);
@@ -70,15 +70,16 @@ mod checks {
                 },
             }
 
+
             loop {
                 let count = file.read(&mut buffer)?;
                 if count == 0 {
                     break;
                 }
-                context.update(&buffer[..count]);
+                Context::update(&mut buffer[..count]);
             }
 
-            Ok(HEXUPPER.encode(context.finish().as_ref()))
+            Ok(HEXUPPER.encode(Context::finish().as_ref()))
         }
 
     }
@@ -105,6 +106,6 @@ mod tests {
 
     #[test]
     fn test_sha256_hash_pass() {
-        assert!(checks::file_checks::file_equals("./tests/hash.txt", Algorithm::SHA256, "F09DC8EA24B801E2E980E06F92110EF577A08F35A32EEC8613624FFD211BF394").unwrap());
+        assert!(checks::file_checks::hash_equals("./tests/hash.txt", Algorithm::SHA256, "F09DC8EA24B801E2E980E06F92110EF577A08F35A32EEC8613624FFD211BF394").unwrap());
     }
 }

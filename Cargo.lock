@@ -181,6 +181,7 @@ dependencies = [
  "data-encoding",
  "digest",
  "ring",
+ "serde",
  "terminal-link",
  "toml",
 ]
