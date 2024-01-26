@@ -1,5 +1,8 @@
 // /src/checks.rs
 
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
 enum CheckType {
     PathExists,
     HashEquals,
@@ -10,7 +13,7 @@ enum Algorithm {
     SHA384,
     SHA512,
 }
-
+#[derive(Debug, Deserialize)]
 pub struct Vuln {
     pass_message: String,
     check_logic: String,
@@ -19,7 +22,7 @@ pub struct Vuln {
 
     checks: Vec<Check>,
 }
-
+#[derive(Debug, Deserialize)]
 pub struct Check {
     check_type: CheckType,
 

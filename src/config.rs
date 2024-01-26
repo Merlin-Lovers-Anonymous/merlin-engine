@@ -2,9 +2,9 @@
 
     use std::{env, fs};
     use std::io::Read;
-    use std::path::Path;
+    use std::path::{Path, PathBuf};
     use std::process::exit;
-    use serde::Deserialize;
+use serde::Deserialize;
     use crate::checks::Vuln;
 
     pub(crate) static mut LOADED_CONFIG: Data = Data {
@@ -13,10 +13,10 @@
 
         config: ConfigFile {
 
-            id: "".to_string(),
-            title: "".to_string(),
-            os: "".to_string(),
-            user: "".to_string(),
+            id: "",
+            title: "",
+            os: "",
+            user: "",
             vulns: vec![],
 
         }
@@ -24,30 +24,30 @@
     };
 
     #[derive(Deserialize)]
-    struct Data {
-        pub(crate) config: ConfigFile,
+    struct Data<'a> {
+        pub(crate) config: ConfigFile<'a>,
     }
 
     #[derive(Deserialize)]
-    struct ConfigFile {
+    struct ConfigFile<'a> {
 
         // Structure for Config File
 
-        pub(crate) id: String,
-        title: String,
-        os: String,
-        user: String,
+        pub(crate) id: &'a str,
+        title: &'a str,
+        os: &'a str,
+        user: &'a str,
 
         vulns: Vec<Vuln>,
     }
 
     pub unsafe fn load_config(file_name: &str) { // Must be unsafe to allow editing of our static variable ☠️
 
-        let config_path: &Path = env::current_exe()?.parent() // Working dir of the EXE
+        let config_path: PathBuf = env::current_exe().expect("Could not find path of executable.").parent() // Working dir of the EXE
             .expect("Could not find working directory.") // Catch if dir does not exist
-            .push(Path::new(&file_name)); // Config file name... Should be config.toml (Maybe allow changing in future?)
+            .join(Path::new(&file_name)); // Config file name... Should be config.toml (Maybe allow changing in future?)
 
-        let file_as_string: String = match fs::read_to_string(config_path) { // Files are scary. Must be safe.
+        let file_as_string: String = match fs::read_to_string(config_path.clone()) { // Files are scary. Must be safe.
 
             // If result is acceptable, set var to result
             Ok(a) => a,
