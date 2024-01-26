@@ -6,8 +6,8 @@ enum CheckType {
 
 }
 enum Algorithm {
-    MD5,
     SHA256,
+    SHA384,
     SHA512,
 }
 
@@ -39,7 +39,7 @@ mod checks {
         use std::io;
         use std::io::Read;
         use std::path::Path;
-        use ring::digest::{Context, SHA256, SHA512}; // MD5
+        use ring::digest::{Context, SHA256, SHA384, SHA512};
         use data_encoding::HEXUPPER;
         use crate::checks::Algorithm;
 
@@ -58,28 +58,29 @@ mod checks {
         fn calculate_hash(file_path: &str, algorithm: Algorithm) -> io::Result<String> {
             let mut file = File::open(file_path)?;
             let mut buffer = [0; 1024];
+            let mut context;
+
             match algorithm {
-                Algorithm::MD5 => {
-                    //Context::new(&MD5);
-                },
                 Algorithm::SHA256 => {
-                    Context::new(&SHA256);
+                    context = Context::new(&SHA256);
                 },
+                Algorithm::SHA384 => {
+                    context = Context::new(&SHA384);
+                }
                 Algorithm::SHA512 => {
-                    Context::new(&SHA512);
+                    context = Context::new(&SHA512);
                 },
             }
-
 
             loop {
                 let count = file.read(&mut buffer)?;
                 if count == 0 {
                     break;
                 }
-                Context::update(&mut buffer[..count]);
+                context.update(&mut buffer[..count]);
             }
 
-            Ok(HEXUPPER.encode(Context::finish().as_ref()))
+            Ok(HEXUPPER.encode(context.finish().as_ref()))
         }
 
     }
@@ -106,6 +107,6 @@ mod tests {
 
     #[test]
     fn test_sha256_hash_pass() {
-        assert!(checks::file_checks::hash_equals("./tests/hash.txt", Algorithm::SHA256, "F09DC8EA24B801E2E980E06F92110EF577A08F35A32EEC8613624FFD211BF394").unwrap());
+        assert!(checks::file_checks::hash_equals("C:/Users/Matin/Documents/Github/merlin-engine/src/tests/hash.txt", Algorithm::SHA256, "F09DC8EA24B801E2E980E06F92110EF577A08F35A32EEC8613624FFD211BF394"));
     }
 }
