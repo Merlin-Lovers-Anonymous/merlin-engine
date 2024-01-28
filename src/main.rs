@@ -27,17 +27,6 @@ fn main() {
 
     match args[1].as_str() {
 
-        _ => unsafe {
-            println!("Testing config load...");
-
-            config::load_config("config.toml");
-
-            println!("Loaded id: {}", config::LOADED_CONFIG.config.id);
-
-            println!("Done");
-            exit(0);
-        },
-
         "--help" => {
             println!("Please see Merlin Engine documentation for an explanation of command-line parameters.");
             println!("Click {} to visit the wiki.", Link::new("here", "https://github.com/Merlin-Lovers-Anonymous/merlin-engine/wiki"));
